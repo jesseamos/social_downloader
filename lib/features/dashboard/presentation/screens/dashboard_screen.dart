@@ -6,6 +6,7 @@ import 'package:social_downloader/core/config/colors_constant.dart';
 import 'package:social_downloader/core/icons/vectors_icons.dart';
 import 'package:social_downloader/core/widgets/svg_icon.dart';
 import 'package:social_downloader/features/dashboard/presentation/widget/custom_header.dart';
+import 'package:social_downloader/features/dashboard/presentation/widget/download_bottom_modal.dart';
 import 'package:social_downloader/features/dashboard/presentation/widget/sidebar.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -55,6 +56,34 @@ class _DashboardScreenState extends State<DashboardScreen>
     } else {
       _animationController.forward();
     }
+  }
+
+  void _showDownloadModal() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      barrierColor: Colors.black.withOpacity(0.15),
+      builder: (context) {
+        return Stack(
+          children: [
+            // 🔥 Fullscreen blur
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Container(color: Colors.black.withOpacity(0.1)),
+              ),
+            ),
+
+            // ⬇️ Bottom-anchored modal
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: const DownloadBottomModal(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -120,24 +149,27 @@ class _DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                       SizedBox(width: 15.w),
-                      Container(
-                        height: 48.h,
-                        width: 48.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: ColorsConstant.teal,
-                          boxShadow: [
-                            BoxShadow(
-                              color: ColorsConstant.teal.withOpacity(0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.file_download_outlined,
-                          color: Colors.white,
-                          size: 28.sp,
+                      GestureDetector(
+                        onTap: _showDownloadModal,
+                        child: Container(
+                          height: 48.h,
+                          width: 48.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: ColorsConstant.teal,
+                            boxShadow: [
+                              BoxShadow(
+                                color: ColorsConstant.teal.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.file_download_outlined,
+                            color: Colors.white,
+                            size: 28.sp,
+                          ),
                         ),
                       ),
                     ],
